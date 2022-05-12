@@ -134,3 +134,9 @@ class Organism:
             canvas.ellipse([left_x,left_y,right_x,right_y],outline=color,fill=color)
 
             return image
+
+def fitness(im1, im2):
+    i1 = numpy.array(im1,numpy.int16)
+    i2 = numpy.array(im2,numpy.int16)
+    dif = numpy.sum(numpy.abs(i1-i2))
+    return (dif / 255.0 * 100) / i1.size
