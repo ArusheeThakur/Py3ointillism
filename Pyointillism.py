@@ -37,4 +37,52 @@ class Color:
         self.r=max(0, (min(self.r+r, 255)))
         self.g=max(0, (min(self.g+g, 255)))
         self.b=max(0, (min(self.b+b, 255)))
-        
+
+class Gene:
+    def __init__(self, size):
+        #here attributes are size and function is mutate 
+        #Diameter,Position and color are all classes define above 
+        self.size=size
+        self.diameter=random.randint(5,15)
+        self.pos=Position(random.randint(0,size[0]), random.randint(0, size[1]))
+        self.color=Color(random.randint(0,255),random.randint(0,255),random.randint(0,255))
+        self.params=["diameter", "position", "color"]
+    
+    def mutate(self):
+        #probability gauss=continous discontinuity function 
+        mutationSize=max(1, int(round(random.gauss(15,4))))/100 
+        mutationType=random.choice(self.params)
+        #Need to genereate a new diameter which is withing the bound of previous diameter
+        lowerBound = 1-mutationSize 
+        upperBound = 1+mutationSize
+        if mutationType=="diameter":
+            smallerDiameter=int(self.diameter*(lowerBound)) 
+            biggerDiameter=int(self.diameter*(upperBound))
+            newDiameterValue = random.randint(smallerDiameter,biggerDiameter)
+            self.diameter = max(1,newDiameterValue)
+        elif mutationType=="position":
+            #Again using the same logic as above we generate/mutate a new position 
+            #The new position is within the bounds of the previous positions*lower/upper bound
+            leftX=int(self.pos.x*(lowerBound))
+            rightX=int(self.pos.x*(upperBound))
+            x = max(0,random.randint(leftX ,rightX))
+            leftY=int(self.pos.y*(lowerBound))
+            rightY=int(self.pos.y*(upperBound))
+            y = max(0,random.randint(leftY ,rightY))
+            newY = min(y,self.size[1])
+            newX = min(x,self.size[0])
+            self.pos = Position(newX,newY)
+        elif mutationType=="color": 
+            #Again using the same logic as above we generate/mutate a new rgb values  
+            #The new values are within the bounds of the previous values*lower/upper bound
+            #Also here self.color.r/b/g means that we are using class color in class gene 
+            less_red=int(self.color.r*(lowerBound))
+            more_red=int(self.color.r*(upperBound))
+            less_green=int(self.color.g*(lowerBound))
+            more_green=int(self.color.g*(upperBound))
+            less_blue=int(self.color.b*(lowerBound))
+            more_blue=int(self.color.b*(upperBound))
+            r = min(max(0,random.randint(less_red,more_red,255)))
+            g = min(max(0,random.randint(less_green,more_green,255)))
+            b = min(max(0,random.randint(less_blue,more_blue,255)))
+            self.color = Color(r,g,b)
