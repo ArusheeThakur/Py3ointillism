@@ -86,3 +86,51 @@ class Gene:
             g = min(max(0,random.randint(less_green,more_green,255)))
             b = min(max(0,random.randint(less_blue,more_blue,255)))
             self.color = Color(r,g,b)
+
+class Organism:
+
+    def __init__(self,size,num):
+        self.size = size
+        self.genes=[] #Here we are creating an array 
+        for _ in range(num):
+            g=Gene(size) #Okay here is a slight dout that I have, is the size here gene size??
+            #appending/adding genes
+            self.genes.append(g) 
+      
+    def mutate(self):
+        #here we see if the length of the array self gene is less than 200 then we genereate 
+        #a random floast value between 0 and 1 this is what random.random function does 
+        #if its lesser than mutation chance then the genes will mutate 
+        if len(self.genes) < 200:
+            for g in self.genes:
+                if MUTATION_CHANCE > random.random():
+                    g.mutate()
+
+        else:
+            #mh v
+            no_of_genes =int(len(self.genes)*MUTATION_CHANCE)
+            for g in random.sample(self.genes,no_of_genes):
+                g.mutate()
+
+        if ADD_GENE_CHANCE > random.random():
+            self.genes.append(Gene(self.size))
+            
+        if len(self.genes)>0 and rEM_GENE_CHANCE < random.random():
+            self.genes.remove(random.choice(self.genes))
+
+    def drawImage(self):
+        image = Image.new("rGB",self.size,(255,255,255))
+        canvas= ImageDraw.Draw(image)
+
+        for gene in self.genes:
+            colour = (gene.color.r, gene.color.g, gene.color.b)
+
+        for g in self.genes:
+            color = (g.color.r,g.color.g,g.color.b)
+            left_x=g.pos.x-g.diameter
+            left_y=g.pos.y-g.diameter
+            right_x=g.pos.x+g.diameter
+            right_y=g.pos.y+g.diameter
+            canvas.ellipse([left_x,left_y,right_x,right_y],outline=color,fill=color)
+
+            return image
