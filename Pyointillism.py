@@ -20,3 +20,21 @@ try:
 except:
     print("Please check input file")
     exit()
+
+class Position:
+    def __init__(self,x,y):
+        self.x=x
+        self.y=y
+    def __add__(self,o):
+        return Position(self.x+o.x, self.y+o.y)
+
+class Color:
+    def __init__(self, r, g, b):
+        self.r=r
+        self.g=g
+        self.b=b
+    def shift(self,r , g, b):
+        self.r=max(0, (min(self.r+r, 255)))
+        self.g=max(0, (min(self.g+g, 255)))
+        self.b=max(0, (min(self.b+b, 255)))
+        
